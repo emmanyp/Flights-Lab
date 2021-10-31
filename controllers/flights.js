@@ -33,7 +33,10 @@ function show(req, res) {
 		res.render('flights/show', {
 			title: 'Flight Detail',
 			flight,
+			
 		});
+
+		console.log(flight);
 	});
 }
 
@@ -43,21 +46,14 @@ function deleteFlight(req, res) {
 	});
 }
 function createTicket(req, res) {
-    Flight.findById(req.params.id, function (err, tickets) {
-			res.render('flights/tickets', {
-				title: 'Add Ticket',
+	Flight.findById(req.params.id, function (error, flight) {
+				flight.ticket.push(req.body);
+				flight.save(function(err){
+					res.redirect(`/flights/${flight._id}`);
+				})
 			});
-		});
 }
 
-function saveTicket(req, res) {
-	Flight.findById(req.params.id, function (error, flight) {
-			flight.tickets.push();
-			flight.save(function (err) {
-				res.redirect(`/flights/${flight._id}`);
-			});
-		});
-}
 
 export{
   newFlight as new, 
@@ -66,5 +62,4 @@ export{
   show,
   deleteFlight as delete,
   createTicket, 
-	saveTicket
 }
