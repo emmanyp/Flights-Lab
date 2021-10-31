@@ -1,0 +1,22 @@
+<%- include('../partials/html-head') %>
+  
+  <%- include('../partials/nav') %>
+
+    <main>
+      <h1>
+        <%= title %>
+      </h1>
+      <form action="/tickets/" method="POST" >
+        <label>Seat:</label> 
+        <input name="seat" required pattern="[A-F][1-9]\d?">
+        <br>
+        <label>Price:</label>
+        <input type="number" name="price">
+        <br>
+      </form>
+      <form>
+        <button type="submit">Save Ticket</button>
+      </form>
+    </main>
+
+    <%- include("../partials/footer") %>
