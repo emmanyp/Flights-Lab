@@ -36,7 +36,7 @@ function show(req, res) {
 			
 		});
 
-		console.log(flight);
+		// console.log(flight);
 	});
 }
 
@@ -45,13 +45,33 @@ function deleteFlight(req, res) {
 		res.redirect('/flights');
 	});
 }
+
 function createTicket(req, res) {
 	Flight.findById(req.params.id, function (error, flight) {
-				flight.ticket.push(req.body);
+				flight.tickets.push(req.body);
 				flight.save(function(err){
 					res.redirect(`/flights/${flight._id}`);
 				})
 			});
+}
+
+function deleteTicket(req, res) {
+	Flight.findById(req.params.id, function (err, flight) {
+		console.log("this is req",req.params)
+		console.log("this is flight",flight)
+		flight.tickets.remove({_id: req.params.ticketid})
+		console.log('ticket id:', req.params.ticketid)
+		flight.save(function(err) {
+			res.redirect(`/flights/${flight._id}`)
+		})
+		// tickets.findById(req.params.ticketid)
+		// res.redirect(`/flights/${flight._id})`);
+		// console.log('here is the fight', flight)
+		// console.log(flight.tickets);
+	})
+	// console.log(req.params.id, 'flight id');
+	// console.log(req.params.ticketid, 'ticket id');
+
 }
 
 
@@ -62,4 +82,5 @@ export{
   show,
   deleteFlight as delete,
   createTicket, 
+	deleteTicket,
 }
