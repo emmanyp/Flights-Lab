@@ -1,4 +1,5 @@
 import { Flight} from '../models/Flight.js'
+import {Destination} from '../models/Destination.js'
 
 function newFlight(req, res) {
   res.render("flights/new", {
@@ -14,7 +15,11 @@ function create(req, res) {
 	}
   const flight = new Flight(req.body);
   Flight.create(req.body, function(error, flight) {
-    res.redirect("/flights")
+		if (error) {
+			
+			return res.redirect("/flights/new")
+		}
+		res.redirect('/flights/');
   })
 }
 
@@ -29,14 +34,16 @@ function flightsIndex(req, res) {
 }
 
 function show(req, res) {
-	Flight.findById(req.params.id, function (err, flight) {
-		res.render('flights/show', {
-			title: 'Flight Detail',
-			flight,
-			
+	Flight.findById(req.params.id)
+		.populate('destinations')
+		.exec(function(err, flight) {
+			Destination.find({_id: {$nin: flight.destinations}}, function (err, destinations) {
+				res.render('flights/show', {
+					title: 'Flight Detail',
+					flight,
+					destinations,
+			})	
 		});
-
-		// console.log(flight);
 	});
 }
 
@@ -57,22 +64,21 @@ function createTicket(req, res) {
 
 function deleteTicket(req, res) {
 	Flight.findById(req.params.id, function (err, flight) {
-		console.log("this is req",req.params)
-		console.log("this is flight",flight)
 		flight.tickets.remove({_id: req.params.ticketid})
-		console.log('ticket id:', req.params.ticketid)
 		flight.save(function(err) {
 			res.redirect(`/flights/${flight._id}`)
 		})
-		// tickets.findById(req.params.ticketid)
-		// res.redirect(`/flights/${flight._id})`);
-		// console.log('here is the fight', flight)
-		// console.log(flight.tickets);
 	})
-	// console.log(req.params.id, 'flight id');
-	// console.log(req.params.ticketid, 'ticket id');
-
 }
+
+// function addToAirport(req, res) {
+// 	Flight.findById(req.params.id, function (err, flight) {
+// 		flight.airport.push(req.body.destinationId);
+// 		flight.save(function (err) {
+// 			res.redirect(`/flights/${flight._id}`);
+// 		});
+// 	});
+// }
 
 
 export{
@@ -83,4 +89,5 @@ export{
   deleteFlight as delete,
   createTicket, 
 	deleteTicket,
+	// addToAirport
 }

@@ -12,11 +12,6 @@ const ticketSchema = new Schema(
 
 const flightSchema = new Schema({
 	airline: String,
-	airport: {
-		type: String,
-		enum: ['AUS', 'DFW', 'DEN', 'LAX', 'SAN'],
-		default: 'DEN',
-	},
 	flightNo: {
 		type: Number,
 		required: true,
@@ -26,6 +21,7 @@ const flightSchema = new Schema({
 		default: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
 	},
 	tickets: [ticketSchema],
+	destinations: [{ type: Schema.Types.ObjectId, ref: 'Destination' }],
 });
 
 const Flight = mongoose.model('Flight', flightSchema)
