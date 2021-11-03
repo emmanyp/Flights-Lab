@@ -71,14 +71,14 @@ function deleteTicket(req, res) {
 	})
 }
 
-// function addToAirport(req, res) {
-// 	Flight.findById(req.params.id, function (err, flight) {
-// 		flight.airport.push(req.body.destinationId);
-// 		flight.save(function (err) {
-// 			res.redirect(`/flights/${flight._id}`);
-// 		});
-// 	});
-// }
+function addToAirport(req, res) {
+	Flight.findById(req.params.id, function (err, flight) {
+		flight.destinations.push(req.body.destinationId);
+		flight.save(function (err) {
+			res.redirect(`/flights/${flight._id}`);
+		});
+	});
+}
 
 
 export{
@@ -89,5 +89,5 @@ export{
   deleteFlight as delete,
   createTicket, 
 	deleteTicket,
-	// addToAirport
+	addToAirport
 }

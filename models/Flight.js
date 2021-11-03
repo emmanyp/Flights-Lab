@@ -12,6 +12,10 @@ const ticketSchema = new Schema(
 
 const flightSchema = new Schema({
 	airline: String,
+	airport: {
+	type: String,
+	enum: ['AUS', 'DFW', 'DEN', 'LAX', 'SAN'],
+},
 	flightNo: {
 		type: Number,
 		required: true,
